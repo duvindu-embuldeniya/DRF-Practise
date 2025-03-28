@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <h3>Home Page</h3>
+
+    {% for project in projects %}
+
+        <a href="{% url 'single-project' project.id %}">{{project.title}}</a> || {{project.description}} <br>
+        <img src="{{project.imgUrl}}" alt="project_img" width="150px" height="150px">
+        <br><br><br>
+    
+    {% endfor %}
+
+{% endblock content %}

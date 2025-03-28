@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <h3>Single Project</h3>
+
+    <b>{{project.title}} || {{project.description}}</b>
+    <br>
+    <a href="{% url 'update-project' project.pk %}">Update Project</a>
+    &nbsp;
+    <a href="{% url 'delete-project' project.pk %}">Delete Project</a>
+
+{% endblock content %}
