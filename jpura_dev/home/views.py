@@ -7,7 +7,7 @@ def home(request):
     context = {'projects': projects}
     return render(request, 'home/index.html', context)
 
-def project(request, pk):
+def singleProject(request, pk):
     project = Project.objects.get(id = pk)
     context = {'project':project}
     return render(request, 'home/single-project.html',context)
