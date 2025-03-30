@@ -22,14 +22,21 @@
     
     {% include 'navbar.html' %}
 
-    {% if messages %}
-            {% for message in messages %}
-                {{message}}
-            {% endfor %}
-    {% endif %}
+
+        {% for message in messages %}
+            <div class="alert alert--{{message.tags}}">
+                <p class="alert__message">{{message}}</p>
+                <!-- <button class="alert__close">⨯</button> -->
+            </div>
+        {% endfor %}
+
+
+
 
     {% block content %}
     {% endblock content %}
 
+
+    <script src="{% static 'js/script.js' %}"></script>
 </body>
 </html>

@@ -24,6 +24,8 @@ def register(request):
             auth.login(request, new_user)
             messages.success(request, "Account created successfully!")
             return redirect('update-profile', username = new_user.username)
+        else:
+            messages.error(request, "Something went wrong!")
     context = {'status':status, 'form':form}
     return render(request, 'home/login_register.html', context)
 
