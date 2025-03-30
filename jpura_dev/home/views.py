@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from . models import Project, Review, Tag, Profile
-from . forms import ProjectForm, ProfileForm
+from . forms import ProjectForm, ProfileForm, UserRegistrationForm
 from django.contrib.auth.models import User, auth
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -12,10 +12,24 @@ def home(request): #render our profiles
 
 
 def register(request):
-    pass
+    status = 'register'
+    form = UserRegistrationForm()
+    if request.method == 'POST':
+        form = UserRegistrationForm(request.POST)
+        if form.is_valid():
+            new_user = form.save(commit=False)
+            new_user.username =  new_user.username.lower()
+            new_user.save()
+
+            auth.login(request, new_user)
+            messages.success(request, "Account created successfully!")
+            return redirect('update-profile', username = new_user.username)
+    context = {'status':status, 'form':form}
+    return render(request, 'home/login_register.html', context)
 
 
 def login(request):
+    status = 'login'
     if request.user.is_authenticated:
         messages.info(request, 'You\'ve already loged-in!')
         return redirect('home')
@@ -30,7 +44,8 @@ def login(request):
         else:
             messages.error(request, 'User doesn\'t exist!')
             return redirect('login')
-    return render(request, 'home/login_register.html')
+    context = {'status':status}
+    return render(request, 'home/login_register.html', context)
 
 
 def logout(request):
