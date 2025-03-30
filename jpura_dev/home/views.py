@@ -1,16 +1,36 @@
 from django.shortcuts import render, redirect
-from . models import Project, Review, Tag
+from . models import Project, Review, Tag, Profile
 from . forms import ProjectForm
+from django.contrib.auth.models import User, auth
 
-def home(request):
+def home(request): #render our profiles
+    profiles = Profile.objects.all()
+    context = {'profiles': profiles}
+    return render(request, 'home/index.html', context)
+
+
+def singleProfile(request, username):
+    profile = User.objects.get(username = username).profile
+    top_skills = profile.user.skill_set.exclude(description__exact = '')
+    other_skills = profile.user.skill_set.filter(description__exact = '')
+    projects = profile.user.project_set.all()
+    context = {'profile':profile, 'top_skills': top_skills,
+                'other_skills': other_skills, 'projects':projects}
+    return render(request, 'home/profile.html', context)
+
+
+
+def projects(request):
     projects = Project.objects.all()
     context = {'projects': projects}
-    return render(request, 'home/index.html', context)
+    return render(request, 'home/projects.html', context)
 
 def singleProject(request, pk):
     project = Project.objects.get(id = pk)
     context = {'project':project}
     return render(request, 'home/single-project.html',context)
+
+
 
 def createProject(request):
     form = ProjectForm()
@@ -22,6 +42,8 @@ def createProject(request):
     context = {'form':form}
     return render(request, 'home/project_form.html', context)
 
+
+
 def updateProject(request, pk):
     project = Project.objects.get(id = pk)
     form = ProjectForm(instance=project)
@@ -32,6 +54,8 @@ def updateProject(request, pk):
             return redirect('single-project', pk=project.pk)
     context = {'form':form}
     return render(request, 'home/project_form.html', context)
+
+
 
 def deleteProject(request, pk):
     object = Project.objects.get(id=pk)
