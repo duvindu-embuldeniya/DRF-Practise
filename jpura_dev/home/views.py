@@ -1,12 +1,45 @@
 from django.shortcuts import render, redirect
 from . models import Project, Review, Tag, Profile
-from . forms import ProjectForm
+from . forms import ProjectForm, ProfileForm
 from django.contrib.auth.models import User, auth
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 def home(request): #render our profiles
     profiles = Profile.objects.all()
     context = {'profiles': profiles}
     return render(request, 'home/index.html', context)
+
+
+def register(request):
+    pass
+
+
+def login(request):
+    if request.user.is_authenticated:
+        messages.info(request, 'You\'ve already loged-in!')
+        return redirect('home')
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        auth_user = auth.authenticate(username = username, password = password)
+        if auth_user is not None:
+            auth.login(request, auth_user)
+            messages.success(request, 'Successfully loged-in!')
+            return redirect('home')
+        else:
+            messages.error(request, 'User doesn\'t exist!')
+            return redirect('login')
+    return render(request, 'home/login_register.html')
+
+
+def logout(request):
+    if not(request.user.is_authenticated):
+        messages.info(request, 'You\'ve not loged-in!')
+        return redirect('home')
+    auth.logout(request)
+    messages.success(request, 'Successfully loged-out!')
+    return redirect('home')
 
 
 def singleProfile(request, username):
@@ -19,17 +52,29 @@ def singleProfile(request, username):
     return render(request, 'home/profile.html', context)
 
 
+def updateProfile(request, username):
+    current_user = User.objects.get(username = username)
+    current_profile = current_user.profile
+    form = ProfileForm(instance = current_profile)
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, instance= current_profile)
+        if form.is_valid():
+            form.save()
+            return redirect('single-profile', username = request.user.username)
+    context = {'form':form}
+    return render(request, 'home/profile_form.html', context)
+
 
 def projects(request):
     projects = Project.objects.all()
     context = {'projects': projects}
     return render(request, 'home/projects.html', context)
 
+
 def singleProject(request, pk):
     project = Project.objects.get(id = pk)
     context = {'project':project}
     return render(request, 'home/single-project.html',context)
-
 
 
 def createProject(request):
@@ -43,7 +88,6 @@ def createProject(request):
     return render(request, 'home/project_form.html', context)
 
 
-
 def updateProject(request, pk):
     project = Project.objects.get(id = pk)
     form = ProjectForm(instance=project)
@@ -54,7 +98,6 @@ def updateProject(request, pk):
             return redirect('single-project', pk=project.pk)
     context = {'form':form}
     return render(request, 'home/project_form.html', context)
-
 
 
 def deleteProject(request, pk):
