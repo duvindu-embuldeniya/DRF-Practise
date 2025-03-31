@@ -82,6 +82,12 @@ def updateProfile(request, username):
     return render(request, 'home/profile_form.html', context)
 
 
+def updateAccount(request, username):
+    account_user = User.objects.get(username = username)
+    context = {'account_user':account_user}
+    return render(request, 'home/account.html', context)
+
+
 def projects(request):
     projects = Project.objects.all()
     context = {'projects': projects}

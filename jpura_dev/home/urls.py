@@ -16,4 +16,5 @@ urlpatterns = [
 
     path('profile/<str:username>/', singleProfile, name = 'single-profile'),
     path('profile/<str:username>/update/', updateProfile, name = 'update-profile'),
+    path('profile/<str:username>/account/', updateAccount, name = 'update-account'),
 ]
