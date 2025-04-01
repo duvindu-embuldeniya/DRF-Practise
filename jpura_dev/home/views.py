@@ -4,11 +4,35 @@ from . forms import ProjectForm, ProfileForm, UserRegistrationForm, SkillForm
 from django.contrib.auth.models import User, auth
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from .utils import searchProfile, searchProject
+from django.db.models import Q
 
 def home(request): #render our profiles
-    profiles = Profile.objects.all()
-    context = {'profiles': profiles}
+
+    profiles, query = searchProfile(request)
+    
+    # query = request.GET.get('profile') if request.GET.get('profile') else ''
+    # skills = request.GET.get('profile') if request.GET.get('profile') else ''
+    
+    # skills = Skill.objects.filter(
+    #     Q(name__icontains = skills)
+    # )
+    
+    # profiles = Profile.objects.distinct().filter(
+    #     Q(name__icontains = query)|
+    #     Q(user__skill__in = skills)
+    # )
+
+    context = {'profiles': profiles, 'query':query}
     return render(request, 'home/index.html', context)
+
+
+
+
+def projects(request):
+    projects, query = searchProject(request)
+    context = {'projects': projects, 'query': query}
+    return render(request, 'home/projects.html', context)
 
 
 def register(request):
@@ -78,7 +102,7 @@ def updateProfile(request, username):
     current_profile = current_user.profile
     form = ProfileForm(instance = current_profile)
     if request.method == 'POST':
-        form = ProfileForm(request.POST, instance= current_profile)
+        form = ProfileForm(request.POST, request.FILES, instance= current_profile)
         if form.is_valid():
             form.save()
             return redirect('single-profile', username = request.user.username)
@@ -97,10 +121,6 @@ def updateAccount(request, username):
 
 
 
-def projects(request):
-    projects = Project.objects.all()
-    context = {'projects': projects}
-    return render(request, 'home/projects.html', context)
 
 
 def singleProject(request, pk):
