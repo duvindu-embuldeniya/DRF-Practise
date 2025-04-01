@@ -1,0 +1,28 @@
+{% if queryset.has_other_pages %}
+
+
+    {% if queryset.has_previous %}
+        <a class="page" name="page" data-page="{{1}}" href="?page=1">First</a>
+        <a class="page" name="page" data-page="{{queryset.previous_page_number}}" href="?page={{queryset.previous_page_number}}">Previous</a>
+    {% endif %}
+
+
+
+    {% for num in queryset.paginator.page_range %}
+
+        {% if num == queryset.number %}
+            <a class="page" data-page="{{num}}" name="page" href="?page={{num}}">{{num}}</a>
+        {% elif num > queryset.number|add:'-3' and num < queryset.number|add:'3' %} 
+            <a class="page" data-page="{{num}}" name="page" href="?page={{num}}">{{num}}</a>           
+        {% endif %}
+
+    {% endfor %}
+
+
+
+    {% if queryset.has_next %}
+        <a class="page" data-page="{{queryset.next_page_number}}" name="page" href="?page={{queryset.next_page_number}}">Next</a>
+        <a class="page" data-page="{{queryset.paginator.num_pages}}" name="page" href="?page={{queryset.paginator.num_pages}}">Last</a>
+    {% endif %}
+
+{% endif %}

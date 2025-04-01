@@ -5,12 +5,32 @@ from django.contrib.auth.models import User, auth
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .utils import searchProfile, searchProject
+
 from django.db.models import Q
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+
+
 
 def home(request): #render our profiles
 
+    result = 2
+    page = request.GET.get('page') if request.GET.get('page') else ''
+
     profiles, query = searchProfile(request)
-    
+
+    paginator = Paginator(profiles, result)
+
+    try:
+        profiles = paginator.page(page)
+
+    except PageNotAnInteger as error1:
+        page = '1'
+        profiles = paginator.page(page)
+
+    except EmptyPage as error2:
+        page = paginator.num_pages
+        profiles = paginator.page(page)        
+
     # query = request.GET.get('profile') if request.GET.get('profile') else ''
     # skills = request.GET.get('profile') if request.GET.get('profile') else ''
     
@@ -30,7 +50,25 @@ def home(request): #render our profiles
 
 
 def projects(request):
+
+    page = request.GET.get('page') if request.GET.get('page') else ""
+    result = 1
+
     projects, query = searchProject(request)
+
+    paginator = Paginator(projects, result)
+
+    try:
+        projects = paginator.page(page)
+    
+    except PageNotAnInteger as error3:
+        page = '1'
+        projects = paginator.page(page)
+
+    except EmptyPage as error4:
+        page = paginator.num_pages
+        projects = paginator.page(page)
+
     context = {'projects': projects, 'query': query}
     return render(request, 'home/projects.html', context)
 
