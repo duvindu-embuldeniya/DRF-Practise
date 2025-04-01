@@ -21,4 +21,9 @@ urlpatterns = [
     path('skill/create/', skillForm, name = 'create-skill'),
     path('skill/<int:pk>/update/', skillUpdate, name = 'skill-update'),
     path('skill/<int:pk>/delete/', deleteSkill, name = 'skill-delete'),
+
+    path('inbox/<str:username>/', inbox, name = 'inbox'),
+    path('message/<str:username>/create/', msgCreate, name = 'message-create'),
+    path('message/<int:pk>/view/', msgView, name = 'message-view'),
 ]
+

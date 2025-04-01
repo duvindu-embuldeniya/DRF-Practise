@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
-from . models import Project, Review, Tag, Profile, Skill
-from . forms import ProjectForm, ProfileForm, UserRegistrationForm, SkillForm, ReviewForm
+from . models import Project, Review, Tag, Profile, Skill, Message
+from . forms import ProjectForm, MessageForm, ProfileForm, UserRegistrationForm, SkillForm, ReviewForm
 from django.contrib.auth.models import User, auth
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -13,7 +13,7 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 def home(request): #render our profiles
 
-    result = 2
+    result = 3
     page = request.GET.get('page') if request.GET.get('page') else ''
 
     profiles, query = searchProfile(request)
@@ -249,3 +249,37 @@ def deleteSkill(request, pk):
         return redirect('update-account', username = request.user)
     context = {'object':object}
     return render(request, 'home/delete_object.html', context)
+
+
+
+def msgCreate(request, username):
+    form = MessageForm()
+    msg_receiver = User.objects.get(username = username)
+    if request.method == 'POST':
+        form = MessageForm(request.POST)
+        new_msg = form.save(commit=False)
+        new_msg.sender = request.user
+        new_msg.receiver = msg_receiver
+
+        new_msg.save()
+        return redirect('single-profile', username = msg_receiver.username)
+    context = {'form': form}
+    return render(request, 'home/message_form.html', context)
+
+
+def msgView(request, pk):
+    msg = Message.objects.get(id = pk)
+    if msg.status == False:
+        msg.status  =True
+        msg.save()
+    context = {'msg':msg}
+    return render(request, 'home/message_view.html', context)
+
+
+
+def inbox(request, username):
+    current_user = User.objects.get(username = username)
+    my_msgs = current_user.receiver.all()
+    news = my_msgs.filter(status = False).count()
+    context = {'my_msgs': my_msgs, 'news':news}
+    return render(request, 'home/inbox.html', context)
