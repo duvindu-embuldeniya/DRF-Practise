@@ -17,4 +17,8 @@ urlpatterns = [
     path('profile/<str:username>/', singleProfile, name = 'single-profile'),
     path('profile/<str:username>/update/', updateProfile, name = 'update-profile'),
     path('profile/<str:username>/account/', updateAccount, name = 'update-account'),
+
+    path('skill/create/', skillForm, name = 'create-skill'),
+    path('skill/<int:pk>/update/', skillUpdate, name = 'skill-update'),
+    path('skill/<int:pk>/delete/', deleteSkill, name = 'skill-delete'),
 ]

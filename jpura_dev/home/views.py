@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
-from . models import Project, Review, Tag, Profile
-from . forms import ProjectForm, ProfileForm, UserRegistrationForm
+from . models import Project, Review, Tag, Profile, Skill
+from . forms import ProjectForm, ProfileForm, UserRegistrationForm, SkillForm
 from django.contrib.auth.models import User, auth
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -29,7 +29,7 @@ def register(request):
     context = {'status':status, 'form':form}
     return render(request, 'home/login_register.html', context)
 
-
+ 
 def login(request):
     status = 'login'
     if request.user.is_authenticated:
@@ -59,6 +59,10 @@ def logout(request):
     return redirect('home')
 
 
+
+
+
+
 def singleProfile(request, username):
     profile = User.objects.get(username = username).profile
     top_skills = profile.user.skill_set.exclude(description__exact = '')
@@ -86,6 +90,11 @@ def updateAccount(request, username):
     account_user = User.objects.get(username = username)
     context = {'account_user':account_user}
     return render(request, 'home/account.html', context)
+
+
+
+
+
 
 
 def projects(request):
@@ -126,7 +135,47 @@ def updateProject(request, pk):
 def deleteProject(request, pk):
     object = Project.objects.get(id=pk)
     if request.method == 'POST':
-        Project.delete()
+        object.delete()
         return redirect('home')
+    context = {'object':object}
+    return render(request, 'home/delete_project.html', context)
+
+
+
+
+
+def skillForm(request):
+    form = SkillForm()
+    if request.method == 'POST':
+        form = SkillForm(request.POST)
+        if form.is_valid():
+            new_skill = form.save(commit=False)
+            new_skill.owner = request.user
+            new_skill.save()
+            messages.success(request, 'Skill added successfully')
+            return redirect('update-account', username = request.user)
+    context = {'form':form}
+    return render(request, 'home/skill_form.html', context)
+
+
+def skillUpdate(request, pk):
+    skill = Skill.objects.get(id = pk)
+    form = SkillForm(instance = skill)
+    if request.method == 'POST':
+        form = SkillForm(request.POST, instance = skill)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Skill updated successfully')
+            return redirect('update-account', username = request.user)
+    context = {'form':form}
+    return render(request, 'home/skill_form.html', context)
+
+
+def deleteSkill(request, pk):
+    object = Skill.objects.get(id = pk)
+    if request.method == 'POST':
+        object.delete()
+        messages.success(request, 'Skill deleted sucessfully')
+        return redirect('update-account', username = request.user)
     context = {'object':object}
     return render(request, 'home/delete_object.html', context)
