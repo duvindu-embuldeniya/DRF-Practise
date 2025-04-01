@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from . models import Project, Review, Tag, Profile, Skill
-from . forms import ProjectForm, ProfileForm, UserRegistrationForm, SkillForm
+from . forms import ProjectForm, ProfileForm, UserRegistrationForm, SkillForm, ReviewForm
 from django.contrib.auth.models import User, auth
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -104,7 +104,7 @@ def login(request):
         if auth_user is not None:
             auth.login(request, auth_user)
             messages.success(request, 'Successfully loged-in!')
-            return redirect('home')
+            return redirect(request.GET.get('back') if request.GET.get('back') else 'home')
         else:
             messages.error(request, 'User doesn\'t exist!')
             return redirect('login')
@@ -163,7 +163,19 @@ def updateAccount(request, username):
 
 def singleProject(request, pk):
     project = Project.objects.get(id = pk)
-    context = {'project':project}
+    form = ReviewForm()
+    if request.method == 'POST':
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.owner = request.user
+            review.project = project
+            review.save()
+
+            project.vote_update
+
+            return redirect('single-project', pk = project.pk)
+    context = {'project':project, 'form':form}
     return render(request, 'home/single-project.html',context)
 
 

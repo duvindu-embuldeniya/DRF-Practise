@@ -23,6 +23,10 @@ class Profile(models.Model):
             return f"{self.image.url}"
         except Exception as ex:
             return '/static/images/static_profile_model/default.png'
+    
+    class Meta:
+        ordering = ['-created']
+
 
 
 
@@ -34,6 +38,8 @@ class Skill(models.Model):
 
     def __str__(self):
         return f"{self.name} | {self.owner.username}"
+
+
 
 
 
@@ -59,6 +65,27 @@ class Project(models.Model):
         except Exception as ex:
             return '/static/images/static_project_model/default.jpg'
 
+    class Meta:
+        ordering = ['-created']
+
+    @property
+    def vote_update(self):
+        all_votes = self.review_set.all()
+        total_up_count = all_votes.filter(value = 'up').count()
+
+        total_count = all_votes.count()
+        percentage = (total_up_count/total_count) * 100
+
+        self.vote_total = total_count
+        self.vote_ratio = percentage
+        
+        self.save()
+    
+    @property
+    def checksum(self):
+        query_set = self.review_set.all().values_list('owner__id', flat = True)
+        return query_set
+
 
 
 
@@ -67,7 +94,7 @@ class Review(models.Model):
         ('up', 'Up Vote'),
         ('down', 'Down Vote'),
     )
-    # owner
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     body = models.TextField(null=True, blank=True)
     value = models.CharField(max_length=200, choices=VOTE_TYPE)
@@ -76,6 +103,10 @@ class Review(models.Model):
 
     def __str__(self):
         return f"{self.project} | {self.value}"
+
+    # class Meta:
+    #     unique_together = [['owner', 'project']]
+
 
 
 

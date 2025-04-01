@@ -20,6 +20,7 @@ for(let i=0; i < pages.length; i++){
 
     function func(e){
         e.preventDefault()
+        console.log('xxx')
 
         let page = this.dataset.page
 

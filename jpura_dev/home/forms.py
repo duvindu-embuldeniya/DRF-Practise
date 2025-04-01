@@ -4,6 +4,37 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 
+
+
+class ReviewForm(forms.ModelForm):
+    class Meta:
+        model = Review
+        fields = ['body', 'value']
+    
+        # labels ={
+        #     'body': 'Leave Ur Comment'
+        # }
+
+    
+    def __init__(self, *args, **kwargs):
+        super(ReviewForm, self).__init__(*args, **kwargs)
+
+        # for name, field in self.fields.items():
+        #     field.widget.attrs.update({
+        #         'class': 'input'
+        #     })
+
+        self.fields['body'].widget.attrs.update(
+            {'class':'input', 'placeholder':'Leave Your Comment...'})
+
+        self.fields['value'].widget.attrs.update(
+            {'class':'input'})
+
+
+
+
+
+
 class ProjectForm(forms.ModelForm):
     class Meta:
         model = Project
@@ -33,7 +64,6 @@ class ProfileForm(forms.ModelForm):
         fields = '__all__'
         exclude = ['user']
 
-
     
     def __init__(self, *args, **kwargs):
         super(ProfileForm, self).__init__(*args, **kwargs)
@@ -53,8 +83,6 @@ class UserRegistrationForm(UserCreationForm):
         model = User
         fields = ['username', 'email', 'password1', 'password2']
 
-
-
     def __init__(self, *args, **kwargs):
         super(UserRegistrationForm, self).__init__(*args, **kwargs)
 
@@ -69,6 +97,7 @@ class UserRegistrationForm(UserCreationForm):
             raise ValidationError("Email already exist!")
         return email
     
+
 
 
 
