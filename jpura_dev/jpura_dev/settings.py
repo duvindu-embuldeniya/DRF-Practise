@@ -140,8 +140,7 @@ EMAIL_HOST = 'smtp.gmail.com' #service provider
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
-EMAIL_HOST_USER = 'duvindu.inbox@gmail.com'
-EMAIL_HOST_PASSWORD = 'hhkf pnqn tgdz ylyh'
+
 
 
 # Default primary key field type
