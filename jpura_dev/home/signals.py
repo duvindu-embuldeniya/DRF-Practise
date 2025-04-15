@@ -23,7 +23,7 @@ def createProfile(sender, instance, created, *args, **kwargs):
     # recipient_mail = instance.email
 
     # send_mail(
-    #     subject,
+    #     subject, 
     #     message,
     #     sender,
     #     [recipient_mail],
