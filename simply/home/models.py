@@ -70,6 +70,7 @@ class Blog(models.Model):
 class Review(models.Model):
     VOTE_TYPE = (
         ('up','Up Vote'),
+        ('down', 'Down Vote')
     )
 
     type = models.CharField(max_length=200, choices = VOTE_TYPE)
