@@ -19,6 +19,20 @@ class TagSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+# class ProductSerializer(serializers.ModelSerializer):
+#     shop = ShopSerializer(many=False)
+#     tags = TagSerializer(many=True)
+#     buyers = serializers.SerializerMethodField()
+
+#     class Meta:
+#         model = Product
+#         fields = '__all__'
+    
+#     def get_buyers(self,object):
+#         buyers = object.buyer_set.all()
+#         serializer = BuyerSerializer(buyers, many = True)
+#         return serializer.data
+    
 class ProductSerializer(serializers.ModelSerializer):
     shop = ShopSerializer(many=False)
     tags = TagSerializer(many=True)
@@ -27,9 +41,9 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = '__all__'
-    
+
+
     def get_buyers(self,object):
         buyers = object.buyer_set.all()
-        serializer = BuyerSerializer(buyers, many = True)
+        serializer = BuyerSerializer(buyers, many=True)
         return serializer.data
-    
