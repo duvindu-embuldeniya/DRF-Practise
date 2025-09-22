@@ -17,6 +17,7 @@ def get_products(request):
     
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_product(requet,pk):
     try:
         product = Product.objects.get(pk=pk)
