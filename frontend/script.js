@@ -42,12 +42,30 @@ let display_blogs = (data)=>{
             <p> Description :- ${blog.description} </p>
             <p> Total Votes :- ${blog.vote_total} </p>
             <p> Vote percentage :- ${blog.vote_percentage} </p>
-            <button type='submit' id='up'> Up </button>
-            <button type='submit' id='down'> Down </button>
+            <button type='submit' class='btn' data-vote='up' data-blog='${blog.id}'> Up </button>
+            <button type='submit' class='btn' data-vote='down' data-blog='${blog.id}'> Down </button>
             <hr>
         `
     }
+    addVoteCount()
+
 }
 
 
 blogs()
+
+
+
+
+let addVoteCount = ()=>{
+    let buttons = document.getElementsByClassName('btn')
+    // console.log(buttons)
+    for(let i = 0; i < buttons.length; i++){
+        buttons[i].addEventListener('click', (e)=>{
+            // console.log("Button Was Clicked:", i)
+            let value = e.currentTarget.dataset.vote
+            let blog = e.currentTarget.dataset.blog
+            console.log(blog,value)
+        })
+    }
+}

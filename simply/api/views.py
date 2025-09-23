@@ -78,6 +78,7 @@ def blogs(request):
     
         
 @api_view(['GET','POST'])
+@permission_classes([IsAuthenticated])
 def get_blog(request, pk):
     try:
         blog = Blog.objects.get(pk=pk)
