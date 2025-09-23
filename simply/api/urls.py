@@ -14,6 +14,10 @@ urlpatterns = [
     path('users/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('users/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
-    path('blog/<int:pk>/', get_blog, name = 'blog')
+    # path('blogs/', blogs, name = 'blogs'),
+    # path('blog/<int:pk>/', get_blog, name = 'blog')
+
+    path('blogs/', blogs, name = 'blogs'),
+    path('blog/<int:pk>/', get_blog, name = 'blog'),
 ]
 

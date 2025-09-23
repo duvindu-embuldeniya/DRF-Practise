@@ -7,7 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def get_products(request):
     if request.method == 'GET':
         products = Product.objects.all()
@@ -29,16 +29,63 @@ def get_product(request,pk):
         return Response(serializer.data)
 
 
+# @api_view(['GET'])
+# def blogs(request):
+#     if request.method == 'GET':
+#         blogs = Blog.objects.all()
+#         serializer = BlogSerializer(blogs, many = True)
+#         return Response(serializer.data)
+
+
+
+# @api_view(['GET','POST'])
+# @permission_classes([IsAuthenticated])
+# def get_blog(request,pk):
+#     try:
+#         blog = Blog.objects.get(pk=pk)
+#     except:
+#         return Response(status=status.HTTP_404_NOT_FOUND)
+
+#     if request.method == 'GET':
+#         serializer = BlogSerializer(blog)
+#         return Response(serializer.data)
+    
+#     if request.method == 'POST':
+#         user = request.user
+#         data = request.data
+
+#         review,created = Review.objects.get_or_create(
+#             reviewer = user,
+#             blog = blog
+#         )
+
+#         review.type = data['type']
+#         review.save()
+        
+#         blog.get_total
+
+#         serializer = BlogSerializer(blog)
+#         return Response(serializer.data)
+    
+
+@api_view(['GET'])
+# @permission_classes([IsAuthenticated])
+def blogs(request):
+    if request.method == 'GET':
+        objects = Blog.objects.all()
+        serializer = BlogSerializer(objects, many = True)
+        return Response(serializer.data)
+    
+        
 @api_view(['GET','POST'])
-@permission_classes([IsAuthenticated])
-def get_blog(request,pk):
+def get_blog(request, pk):
     try:
         blog = Blog.objects.get(pk=pk)
     except:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        serializer = BlogSerializer(blog)
+        serializer = BlogSerializer(blog, many = False)
         return Response(serializer.data)
     
     if request.method == 'POST':
@@ -52,14 +99,9 @@ def get_blog(request,pk):
 
         review.type = data['type']
         review.save()
-        
+
         blog.get_total
 
         serializer = BlogSerializer(blog)
         return Response(serializer.data)
-    
-
-
-        
-
     

@@ -37,3 +37,15 @@
 // for(let i of set){
 //     console.log(i)
 // }
+
+
+fetch('https://fakestoreapi.com/products')
+.then(result => result.json())
+.then(data => f1(data))
+
+
+function f1(values){
+    for(let i=0; i<values.length; i++){
+        console.log(values[i])
+    }
+}

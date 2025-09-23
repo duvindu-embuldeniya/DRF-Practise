@@ -40,26 +40,52 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 
+# class ReviewSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Review
+#         fields = '__all__'
+
+# class UserSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = User
+#         fields = ['username','email']
+
+
+# class BlogSerializer(serializers.ModelSerializer):
+#     writer = UserSerializer(many=False)
+#     reviews = serializers.SerializerMethodField()
+
+#     class Meta:
+#         model = Blog
+#         fields = '__all__'
+    
+#     def get_reviews(self,object):
+#         reviews = object.review_set.all()
+#         serializer = ReviewSerializer(reviews, many=True)
+#         return serializer.data
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = '__all__'
+
+
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
         fields = '__all__'
 
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ['username','email']
-
 
 class BlogSerializer(serializers.ModelSerializer):
-    writer = UserSerializer(many=False)
+    writer = UserSerializer(many = False)
     reviews = serializers.SerializerMethodField()
 
     class Meta:
         model = Blog
         fields = '__all__'
     
-    def get_reviews(self,object):
+    def get_reviews(self, object):
         reviews = object.review_set.all()
-        serializer = ReviewSerializer(reviews, many=True)
+        serializer = ReviewSerializer(reviews, many = True)
         return serializer.data
