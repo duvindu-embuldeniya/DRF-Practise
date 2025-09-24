@@ -32,6 +32,8 @@ let blogs = ()=>{
     .then(result => result.json())
     .then(data => display_blogs(data))
 }
+blogs()
+
 
 
 let display_blogs = (data)=>{
@@ -52,20 +54,29 @@ let display_blogs = (data)=>{
 }
 
 
-blogs()
-
-
-
 
 let addVoteCount = ()=>{
     let buttons = document.getElementsByClassName('btn')
     // console.log(buttons)
     for(let i = 0; i < buttons.length; i++){
         buttons[i].addEventListener('click', (e)=>{
-            // console.log("Button Was Clicked:", i)
             let value = e.currentTarget.dataset.vote
             let blog = e.currentTarget.dataset.blog
-            console.log(blog,value)
+
+            // console.log(value,blog)
+
+            fetch(`http://localhost:8000/api/blog/${blog}/`,{
+                method:'POST',
+                headers:{
+                    'Content-Type':'application/json',
+                    Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU4NzY4OTI4LCJpYXQiOjE3NTg2ODI1MjgsImp0aSI6IjBlZDkyZDAyNDQyNzRhYjBhNjQ4ZmNlNzI2YzkwMmMyIiwidXNlcl9pZCI6IjEifQ.I16IJuIcSoAhDuUopPBE-tBovaFm21sro8xB9ohDdiM'
+                },
+                body:JSON.stringify({"type": `${value}`})
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data)
+            })
         })
     }
 }
