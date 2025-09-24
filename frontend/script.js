@@ -28,31 +28,6 @@ let display_blogs = (data)=>{
 
 
 
-// let addVoteCount = ()=>{
-//     let buttons = document.getElementsByClassName('btn')
-//     for(let i = 0; i < buttons.length; i++){
-//         buttons[i].addEventListener('click', (e)=>{
-//             let value = e.currentTarget.dataset.vote
-//             let blog = e.currentTarget.dataset.blog
-
-
-//             fetch(`http://localhost:8000/api/blog/${blog}/`,{
-//                 method:'POST',
-//                 headers:{
-//                     'Content-Type':'application/json',
-//                     'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU4NzY4OTI4LCJpYXQiOjE3NTg2ODI1MjgsImp0aSI6IjBlZDkyZDAyNDQyNzRhYjBhNjQ4ZmNlNzI2YzkwMmMyIiwidXNlcl9pZCI6IjEifQ.I16IJuIcSoAhDuUopPBE-tBovaFm21sro8xB9ohDdiM'
-//                 },
-//                 body:JSON.stringify({"type": `${value}`})
-//             })
-//             .then(response => response.json())
-//             .then(data => {
-//                 console.log(data)
-//                 blogs()
-//             })
-//         })
-//     }
-// }
-
 
 let addVoteCount = () => {
     let btns = document.getElementsByClassName('btn')
@@ -61,12 +36,15 @@ let addVoteCount = () => {
             let vote = e.currentTarget.dataset.vote
             let blog = e.currentTarget.dataset.blog
             // console.log(vote,blog)
-
+            
+            // let token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU4NzY4OTI4LCJpYXQiOjE3NTg2ODI1MjgsImp0aSI6IjBlZDkyZDAyNDQyNzRhYjBhNjQ4ZmNlNzI2YzkwMmMyIiwidXNlcl9pZCI6IjEifQ.I16IJuIcSoAhDuUopPBE-tBovaFm21sro8xB9ohDdiM'
+            let token = localStorage.getItem('token')
+            console.log(token)
             fetch(`http://localhost:8000/api/blog/${blog}/`,{
                 method:'POST',
                 headers:{
                     'Content-Type': 'application/json',
-                    'Authorization':'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU4NzY4OTI4LCJpYXQiOjE3NTg2ODI1MjgsImp0aSI6IjBlZDkyZDAyNDQyNzRhYjBhNjQ4ZmNlNzI2YzkwMmMyIiwidXNlcl9pZCI6IjEifQ.I16IJuIcSoAhDuUopPBE-tBovaFm21sro8xB9ohDdiM'
+                    'Authorization':`Bearer ${token}`
                 },
                 body:JSON.stringify({"type": `${vote}`})
             })
@@ -75,6 +53,7 @@ let addVoteCount = () => {
                 console.log(data)
                 blogs()
             })
+            // blogs()
         })
     }
 }
